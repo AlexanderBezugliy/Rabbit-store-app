@@ -1,5 +1,3 @@
-// import Link from 'next/link';
-import React from 'react'
 import { Link } from 'react-router-dom';
 
 
@@ -8,37 +6,40 @@ const GenderCollectionSection = () => {
         <section className='py-16 px-4 lg:px-0'>
             <div className='container mx-auto flex flex-col md:flex-row gap-8'>
                 {/* Women`s Colections */}
-                <div className='relative flex-1'>
-                    <img
-                        src="/womens-collection.webp"
-                        alt="womens-collection"
-                        className='w-full h-[700px] object-cover'
-                    />
 
-                    <div className='absolute bottom-8 left-8 bg-white bg-opacity-90 p-4'>
-                        <h2 className='text-2xl font-bold text-gray-800 mb-3'>
-                            Women`s Collection
-                        </h2>
+                    <div className='relative flex-1'>
+                        <img
+                            src="/womens-collection.webp"
+                            alt="womens-collection"
+                            className='w-full h-[700px] object-contain'
+                        />
 
-                        <Link href='/collections/all?gender=Women' className='text-gray-900 underline'>Shop Now</Link>
+                        <Link to="/collections/women" className='absolute bottom-8 left-8 bg-red-300 rounded-l-3xl bg-opacity-90 p-4'>
+                            <h2 className='text-2xl font-bold text-gray-800 mb-3'>
+                                Women`s Collection
+                            </h2>
+
+                            <div className='text-gray-900 underline'>Shop Now</div>
+                        </Link>
                     </div>
-                </div>
+
+
 
                 {/* Men`s Colections */}
                 <div className='relative flex-1'>
                     <img
-                        src="/mens-collection.webp"
+                        src="/mens-collection(1).jpg"
                         alt="mens-collection"
-                        className='w-full h-[700px] object-cover'
+                        className='w-full h-[700px] object-contain'
                     />
 
-                    <div className='absolute bottom-8 left-8 bg-white bg-opacity-90 p-4'>
+                    <Link to="/collections/men" className='absolute bottom-8 left-8 bg-red-300 rounded-l-3xl bg-opacity-90 p-4'>
                         <h2 className='text-2xl font-bold text-gray-800 mb-3'>
                             Men`s Collection
                         </h2>
 
-                        <Link to='/collections/all?gender=Man' className='text-gray-900 underline'>Shop Now</Link>
-                    </div>
+                        <div className='text-gray-900 underline'>Shop Now</div>
+                    </Link>
                 </div>
             </div>
         </section>
