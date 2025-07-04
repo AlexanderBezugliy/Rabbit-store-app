@@ -6,7 +6,7 @@ import SortOptions from "./SortOptions";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../redux/slices/productsSlice";
-import { filterByBrand, filterByCategory, filterByColor, filterByGender, filterByMaterial, filterByPrice, filterBySearch, filterBySize, sortProducts } from "../../redux/utils/productFilters";
+import { filterByBrand, filterByCategory, filterByColor, filterByGender, filterByMaterial, filterByPrice, filterBySearch, filterBySize, sortProducts } from "../../components/products/utils/productFilters";
 
 
 export default function CollectionPage() {

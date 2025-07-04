@@ -1,90 +1,61 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { products as allProductsData } from '../../data/products';
-import { filterByBrand, filterByCategory, filterByColor, filterByGender, filterByMaterial, filterByPrice, filterBySearch, filterBySize, sortProducts } from '../utils/productFilters';
 
 export const fetchProducts = createAsyncThunk(
     'products/fetchProducts',
-    // Теперь этот thunk просто загружает ВСЕ продукты, без фильтров
     async (_, { rejectWithValue }) => {
         try {
-            // Здесь в реальном приложении был бы API-вызов для получения всех продуктов
-            // const response = await fetch('/api/products');
-            // const data = await response.json();
-            // return data;
-            // Для примера просто возвращаем ваши статические данные
             return allProductsData;
         } catch (err) {
             return rejectWithValue(err.message);
         }
     }
 );
-// export const fetchProducts = createAsyncThunk(
-//     'products/fetchProducts',
-//     (filters, { rejectWithValue }) => {
-//         try {
-//             let filtered = [...allProductsData];
-
-//             filtered = filterByGender(filtered, filters.gender);
-//             filtered = filterByCategory(filtered, filters.category);
-//             filtered = filterByPrice(filtered, filters.minPrice, filters.maxPrice);
-//             filtered = filterByColor(filtered, filters.color);
-//             filtered = filterBySize(filtered, filters.size);
-//             filtered = filterByMaterial(filtered, filters.material);
-//             filtered = filterByBrand(filtered, filters.brand);
-//             filtered = filterBySearch(filtered, filters.searchTerm);
-
-//             filtered = sortProducts(filtered, filters.sortBy);
-
-//             return filtered;
-//         } catch (err) {
-//             return rejectWithValue(err.message);
-//         }
-//     }
-// );
 
 const productsSlice = createSlice({
     name: 'products',
     initialState: {
-        items: [],// Здесь будут храниться ВСЕ продукты после успешной загрузки
+        items: [],
+        productsBasket: [],
         status: 'idle',
         error: null,
-        // currentFilters: {
-        //     gender: '',
-        //     category: '',
-        //     sortBy: '',
-        //     minPrice: 0,
-        //     maxPrice: 100,
-        //     color: '',
-        //     size: [],
-        //     material: [],
-        //     brand: [],
-        //     searchTerm: '',
-        // }
     },
     reducers: {
-        // Обычные функции для изменения состояния (синхронные)
-    //     setFilter: (state, action) => {
-    //         // Обновляем фильтры, сохраняя старые и добавляя новые из action.payload
-    //         state.currentFilters = {
-    //             ...state.currentFilters,
-    //             ...action.payload,
-    //         };
-    //     },
-    //     resetFilters: (state) => {
-    //         // Сбрасываем фильтры к начальным значениям
-    //         state.currentFilters = {
-    //             gender: '',
-    //             category: '',
-    //             sortBy: '',
-    //             minPrice: 0,
-    //             maxPrice: 100,
-    //             color: '',
-    //             size: [],
-    //             material: [],
-    //             brand: [],
-    //             searchTerm: '',
-    //         };
-    //     }
+        addProduct: (state, action) => {
+            const { product, selectedSize, selectedColor, quantity } = action.payload;
+            // Ищем, есть ли уже такой товар в корзине (с таким же ID, размером и цветом)
+            const existingItem = state.productsBasket
+                .find((item) => item.product._id === product._id && item.selectedSize === selectedSize && item.selectedColor === selectedColor);
+
+            if (existingItem) {
+                existingItem.quantity += quantity;// Если товар уже есть, увеличиваем его количество
+            } else {
+                // Если товара нет, добавляем его в корзину
+                state.productsBasket.push({ product, selectedSize, selectedColor, quantity });
+            }
+        },
+        removeProduct: (state, action) => {
+            const { productId, size, color } = action.payload;
+
+            state.productsBasket = state.productsBasket
+                .filter((item) => !(item.product._id === productId && item.selectedSize === size && item.selectedColor === color));
+        },
+        updateQuantity: (state, action) => {
+            const { productId, size, color, newQuantity } = action.payload;
+
+            const itemToUpdate = state.productsBasket
+                .find(item => item.product._id === productId && item.selectedSize === size && item.selectedColor === color);
+
+
+            if (itemToUpdate) {
+                if (newQuantity <= 0) { // Если количество становится 0 или меньше, удаляем товар
+                    state.productsBasket = state.productsBasket
+                        .filter(item => !(item.product._id === productId && item.selectedSize === size && item.selectedColor === color));
+                } else {
+                    itemToUpdate.quantity = newQuantity;
+                }
+            }
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -105,6 +76,6 @@ const productsSlice = createSlice({
     },
 });
 
-// export const { setFilter, resetFilters } = productsSlice.actions;
+export const { addProduct, removeProduct, updateQuantity } = productsSlice.actions;
 
 export default productsSlice.reducer;

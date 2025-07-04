@@ -19,11 +19,12 @@ const CartBasket = ({ basketOpen, toggleCartBasket }) => {
         >
 
             {/* Close Button */}
-            <div className='flex justify-end p-4'>
+            <div className='relative flex justify-end px-5 pt-5'>
                 <button
                     onClick={toggleCartBasket}
+                    className=' bg-white border-2 border-gray-300 p-2 rounded-full hover:bg-red-200'
                 >
-                    <IoMdClose className='h-6 w-6 text-gray-600' />
+                    <IoMdClose className='h-7 w-7 text-red-600' />
                 </button>
             </div>
 
@@ -32,7 +33,6 @@ const CartBasket = ({ basketOpen, toggleCartBasket }) => {
                 <h2 className='text-xl font-semibold mb-4'>Your Cart</h2>
 
                 <CartContents />
-
             </div>
 
             {/* Checkout Button Fixed at the bottom */}

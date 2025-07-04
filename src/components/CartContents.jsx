@@ -1,66 +1,91 @@
-import { RiDeleteBin3Line } from 'react-icons/ri';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeProduct, updateQuantity } from '../redux/slices/productsSlice';
+import { FaTrashCan } from 'react-icons/fa6';
 
 
 const CartContents = () => {
+    const dispatch = useDispatch();
+    const cartItems = useSelector((state) => state.products.productsBasket);
 
-    const cartProducts = [
-        {
-            productId: 1,
-            name: "T-shirt",
-            size: "M",
-            color: "Red",
-            quantity: 1,
-            price: 15,
-            image: "https://picsum.photos/200?random=1",
-        },
-        {
-            productId: 2,
-            name: "Jeans",
-            size: "L",
-            color: "Blue",
-            quantity: 1,
-            price: 15,
-            image: "https://picsum.photos/200?random=2",
-        },
-    ];
+    const handleRemoveItem = (productId, size, color) => {
+        dispatch(removeProduct({ productId, size, color }));
+    };
+
+    const handleUpdateQuantity = (item, newQuantity) => {
+        dispatch(updateQuantity({
+            productId: item.product._id,
+            size: item.selectedSize,
+            color: item.selectedColor,
+            newQuantity: newQuantity
+        }));
+    };
+
+    const totalAmount = cartItems.reduce((total, item) => {
+        const price = item.product.discountPrice || item.product.price;
+        return total + (price * item.quantity);
+    }, 0).toFixed(2);
+
+    if (cartItems.length === 0) {
+        return (
+            <div className="text-center py-8 text-gray-500">
+                <p>Ваша корзина пуста.</p>
+                <p>Начните добавлять товары, чтобы увидеть их здесь!</p>
+            </div>
+        );
+    }
 
     return (
-        <div>
-            {cartProducts.map((item) => (
-                <div key={item.productId} className='flex items-start justify-between py-4 border-b'>
-                    <div className='flex items-start'>
+        <div className="space-y-4">
+            {cartItems.map((item, index) => (
+                <div
+                    key={`${item.product._id}-${item.selectedSize}-${item.selectedColor}-${index}`}
+                    className="flex justify-around items-center space-x-5 border-b pb-4 flex-col sm:flex-row"
+                >
+                    <div>
                         <img
-                            src={item.image}
-                            alt={item.name}
-                            className='w-20 h-24 object-cover mr-4 rounded'
+                            src={item.product.images[0]?.url}
+                            alt={item.product.name}
+                            className="w-24 h-24 object-cover rounded"
                         />
-                        <div>
-                            <h3>{item.name}</h3>
-                            <p className='text-sm text-gray-500'>
-                                size: {item.size} | color: {item.color}
-                            </p>
-                            <div className='flex items-center mt-2'>
-                                <button className='border rounded px-2 py-1 text-xl font-medium'>
-                                    -
-                                </button>
-                                <span className='mx-4'>
-                                    {item.quantity}
-                                </span>
-                                <button className='border rounded px-2 py-1 text-xl font-medium'>
-                                    +
-                                </button>
-                            </div>
+                    </div>
+
+                    <div className="flex-grow">
+                        <h3 className="font-semibold">{item.product.name}</h3>
+                        <p className="text-sm text-gray-600">Size: {item.selectedSize}</p>
+                        <p className="text-sm text-gray-600">Color: {item.selectedColor}</p>
+                        <p className="text-md font-bold">${((item.product.discountPrice || item.product.price) * item.quantity).toFixed(2)}</p>
+
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => handleUpdateQuantity(item, item.quantity - 1)}
+                                className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-400 duration-300"
+                            >
+                                -
+                            </button>
+                            <span>{item.quantity}</span>
+                            <button
+                                onClick={() => handleUpdateQuantity(item, item.quantity + 1)}
+                                className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-400 duration-300"
+                            >
+                                +
+                            </button>
                         </div>
                     </div>
 
-                    <div>
-                        <p>$ {item.price.toLocaleString()}</p>
-                        <button>
-                            <RiDeleteBin3Line className='h-6 w-6 mt-2 text-red-600' />
-                        </button>
-                    </div>
+                    <button
+                        onClick={() => handleRemoveItem(item.product._id, item.selectedSize, item.selectedColor)}
+                        className="flex text-red-500 border rounded-xl p-2 hover:bg-red-200 duration-300"
+                    >
+                        <FaTrashCan className='text-3xl  ' />
+                    </button>
                 </div>
             ))}
+
+            {/* TOTAL PRICE */}
+            <div className="py-2 border-t-2 border-b-2 border-gray-200 mt-4 flex justify-center items-center font-bold text-xl">
+                <span className='mr-3 text-gray-600 text-2xl'>Total:</span>
+                <span>${totalAmount}</span>
+            </div>
         </div>
     )
 }

@@ -14,6 +14,7 @@ import Registration from './pages/Registration';
 import CollectionPage from './pages/collection/Collection';
 import ProductDetailPage from './components/products/ProductDetailPage';
 import BestSellers from './components/BestSellers';
+import { Toaster } from 'sonner';
 
 
 function App() {
@@ -21,6 +22,8 @@ function App() {
 
     return (
         <>
+        <Toaster position="top-right" richColors/>
+
             <Header />
             <Routes>
                 <Route path="/" element={
