@@ -8,7 +8,6 @@ const NewArrivals = () => {
     const scrollRef = useRef(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
-
     
     const updateScrollButtons = () => {
         const container = scrollRef.current;
@@ -66,7 +65,7 @@ const NewArrivals = () => {
                 ref={scrollRef}
                 className="container mx-auto flex overflow-x-auto scroll-smooth space-x-4 scrollbar-hide"
             >
-                {products.slice(0, 6).map((item) => (
+                {products.slice(7, 13).map((item) => (
                     <div key={item._id} className='min-w-[100%] sm:min-w-[50%] lg:min-w-[30%] relative'>
                         <img
                             src={item.images[0]?.url}

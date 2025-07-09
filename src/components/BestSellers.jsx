@@ -9,7 +9,7 @@ const BestSellers = () => {
 
             <div className='container mx-auto flex flex-col-reverse lg:flex-row-reverse items-center bg-green-50 rounded-3xl mb-8'>
                 <div className='lg:w-1/2 p-8 text-center lg:text-right'>
-                    <h2 className='text-4xl lg:text-5xl font-bold mb-6'>The feeling of wide comfort and space gives a feeling of lightness</h2>
+                    <h2 className='text-2xl md:text-3xl lg:text-5xl font-bold mb-6'>The feeling of wide comfort and space gives a feeling of lightness</h2>
                     <p className='text-lg text-gray-600 mb-6'>
                         Discover high-quality, comfortable clothing that effortlessly blends fashion and function. Designed to make you look and feel great every day.
                     </p>

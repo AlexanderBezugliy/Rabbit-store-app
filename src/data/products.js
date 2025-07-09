@@ -225,7 +225,7 @@ export const products = [
         altText: "Regular-Fit Henley Shirt Front View",
       },
       {
-        url: "/productsPictures/StylishJacket.jpg",
+        url: "/productsPictures/StylishJacket(1).jpg",
         altText: "Regular-Fit Henley Shirt Front View",
       },
     ],
@@ -254,7 +254,7 @@ export const products = [
         altText: "Long-Sleeve Thermal Tee Front View",
       },
       {
-        url: "/productsPictures/Long-SleeveThermalTee.jpg",
+        url: "/productsPictures/Long-SleeveThermalTee(1).jpg",
         altText: "Long-Sleeve Thermal Tee Front View",
       },
     ],

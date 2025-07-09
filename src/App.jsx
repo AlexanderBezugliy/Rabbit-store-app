@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/layout/header/Header';
 import Footer from './components/layout/footer/Footer';
@@ -15,14 +15,22 @@ import CollectionPage from './pages/collection/Collection';
 import ProductDetailPage from './components/products/ProductDetailPage';
 import BestSellers from './components/BestSellers';
 import { Toaster } from 'sonner';
+import { useDispatch } from 'react-redux';
+import { fetchProducts } from './redux/slices/productsSlice';
 
 
 function App() {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchProducts());
+    }, [dispatch]);
+
     const womenGrid = products.slice(20, 24);
 
     return (
         <>
-        <Toaster position="top-right" richColors/>
+            <Toaster position="top-right" richColors />
 
             <Header />
             <Routes>

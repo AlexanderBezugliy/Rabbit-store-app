@@ -23,14 +23,13 @@ const productsSlice = createSlice({
     reducers: {
         addProduct: (state, action) => {
             const { product, selectedSize, selectedColor, quantity } = action.payload;
-            // Ищем, есть ли уже такой товар в корзине (с таким же ID, размером и цветом)
+            
             const existingItem = state.productsBasket
                 .find((item) => item.product._id === product._id && item.selectedSize === selectedSize && item.selectedColor === selectedColor);
 
             if (existingItem) {
                 existingItem.quantity += quantity;// Если товар уже есть, увеличиваем его количество
             } else {
-                // Если товара нет, добавляем его в корзину
                 state.productsBasket.push({ product, selectedSize, selectedColor, quantity });
             }
         },
@@ -45,7 +44,6 @@ const productsSlice = createSlice({
 
             const itemToUpdate = state.productsBasket
                 .find(item => item.product._id === productId && item.selectedSize === size && item.selectedColor === color);
-
 
             if (itemToUpdate) {
                 if (newQuantity <= 0) { // Если количество становится 0 или меньше, удаляем товар

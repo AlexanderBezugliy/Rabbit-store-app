@@ -42,10 +42,9 @@ const FilterSidebar = ({ filters, onApplyFilters, onResetFilters }) => {
     const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
     const materials = ["Cotton", "Wool", "Denim", "Polyester", "Silk", "Linen", "Viscose", "Fleece"];
     const brands = ["Urban Threads", "Modern Fit", "Street Style", "Beach Breeze", "Fashionista", "Chic Style"];
-    // const genders = ["Men", "Women"];
 
     return (
-        <div className="p-4">
+        <div className="p-4 w-[95%]">
             <h3 className="text-xl font-medium text-gray-800 mb-4">Filter</h3>
 
             <div className="mb-6">
@@ -57,8 +56,6 @@ const FilterSidebar = ({ filters, onApplyFilters, onResetFilters }) => {
                             name="category"
                             value={cat}
                             onChange={handleChange}
-                            
-                            // checked={localFilter.categories?.includes(cat)}
                             checked={localFilter.category === cat}
                             className="mr-2 h-4 w-4"
                         />

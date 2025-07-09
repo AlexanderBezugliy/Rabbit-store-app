@@ -64,7 +64,6 @@ export default function CollectionPage() {
             sortBy: sortByFromUrl,
         }));
     }, [urlCategory, searchParams]); // Зависимость: urlCategory
-
     // Мемоизированная функция для применения всех фильтров к продуктам
     // Она будет пересчитываться только тогда, когда изменятся allProducts или activeFilters
     const filteredAndSortedProducts = useMemo(() => {
@@ -115,7 +114,6 @@ export default function CollectionPage() {
         setIsSidebarOpen(false);
     }, []);
 
-    // Закрытие сайдбара по клику вне его
     const handleClickOutside = useCallback((e) => {
         if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
             setIsSidebarOpen(false);
@@ -127,12 +125,11 @@ export default function CollectionPage() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [handleClickOutside]);
 
-    // Определение заголовка страницы
     const pageTitle = urlCategory === 'men'
         ? 'Men Collection'
         : urlCategory === 'women'
             ? 'Women Collection'
-            : 'All Collection'; // Если urlCategory 'all' или отсутствует
+            : 'All Collection';
 
     return (
         <div className="flex flex-col lg:flex-row">
@@ -145,114 +142,34 @@ export default function CollectionPage() {
 
             <div
                 ref={sidebarRef}
-                className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} fixed inset-y-0 z-50 left-0 w-64 bg-white overflow-y-auto transition-transform duration-300 lg:static lg:translate-x-0`}
+                className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} 
+                        fixed inset-y-0 z-50 left-0 w-70 bg-white overflow-y-auto 
+                        transition-transform duration-300 lg:static lg:translate-x-0`}
             >
                 <FilterSidebar
-                    filters={activeFilters} // Передаем локальное состояние фильтров
+                    filters={activeFilters}
                     onApplyFilters={handleApplyFilters}
                     onResetFilters={handleResetFilters}
                 />
             </div>
 
             <div className="flex-grow p-4">
-                <h2 className="text-2xl uppercase mb-4">{pageTitle}</h2>
+                <div className="flex justify-between">
+                    <h2 className="my-auto text-2xl uppercase bg-red-300 inline-flex px-4 py-1 rounded-lg text-white">{pageTitle}</h2>
+                    <SortOptions />
+                </div>
 
-                <SortOptions
-                    // Передаем текущее значение сортировки и функцию для его изменения
-                    // currentSort={activeFilters.sortBy}
-                    // onSortChange={(sortValue) => setActiveFilters(prev => ({ ...prev, sortBy: sortValue }))}
-                />
 
                 {status === 'loading' && <p>Loading products...</p>}
                 {status === 'failed' && <p>Error: {error}</p>}
                 {status === 'succeeded' && filteredAndSortedProducts.length === 0 && <p>No products found.</p>}
                 {status === 'succeeded' && filteredAndSortedProducts.length > 0 && (
-                    <ProductGrid products={filteredAndSortedProducts} />
+                    <ProductGrid
+                        products={filteredAndSortedProducts}
+                    />
                 )}
             </div>
         </div>
     );
 }
 
-
-// export default function CollectionPage() {
-//     const { category: urlCategory } = useParams();// Получаем параметр из URL: 'men', 'women', 'all'
-//     const dispatch = useDispatch();
-//     const { items, status, error, currentFilters } = useSelector(state => state.products);
-
-//     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-//     const sidebarRef = useRef(null);
-
-//     useEffect(() => {
-//         const filtersToFetch = {
-//             ...currentFilters,
-//             gender: urlCategory ? urlCategory.charAt(0).toUpperCase() + urlCategory.slice(1) : currentFilters.gender,
-//         };
-//         dispatch(fetchProducts(filtersToFetch));
-//     }, [dispatch, urlCategory, currentFilters]);
-
-//     const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
-
-//     const handleApplyFilters = useCallback((newFilters) => {
-//         dispatch(setFilter(newFilters));
-//         setIsSidebarOpen(false);
-//     }, [dispatch]);
-
-//     const handleResetFilters = useCallback(() => {
-//         dispatch(resetFilters());
-//         setIsSidebarOpen(false);
-//     }, [dispatch]);
-
-//     const handleClickOutside = useCallback((e) => {
-//         if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
-//             setIsSidebarOpen(false);
-//         }
-//     }, []);
-
-//     useEffect(() => {
-//         document.addEventListener("mousedown", handleClickOutside);
-//         return () => document.removeEventListener("mousedown", handleClickOutside);
-//     }, [handleClickOutside]);
-
-//     const pageTitle = urlCategory
-//         ? `${urlCategory.charAt(0).toUpperCase() + urlCategory.slice(1)} Collection`
-//         : "All Collection";
-
-//     return (
-//         <div className="flex flex-col lg:flex-row">
-//             <button
-//                 onClick={toggleSidebar}
-//                 className="lg:hidden border p-2 flex justify-center items-center"
-//             >
-//                 <FaFilter className="mr-2" /> Filters
-//             </button>
-
-//             <div
-//                 ref={sidebarRef}
-//                 className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} fixed inset-y-0 z-50 left-0 w-64 bg-white overflow-y-auto transition-transform duration-300 lg:static lg:translate-x-0`}
-//             >
-//                 <FilterSidebar
-//                     filters={currentFilters}
-//                     onApplyFilters={handleApplyFilters}
-//                     onResetFilters={handleResetFilters}
-//                 />
-//             </div>
-
-//             <div className="flex-grow p-4">
-//                 <h2 className="text-2xl uppercase mb-4">
-//                     {pageTitle}
-//                     {/* {urlCategory ? `${urlCategory} Collection` : "All Collection"} */}
-//                 </h2>
-
-//                 <SortOptions />
-
-//                 {status === 'loading' && <p>Loading products...</p>}
-//                 {status === 'failed' && <p>Error: {error}</p>}
-//                 {status === 'succeeded' && items.length === 0 && <p>No products found.</p>}
-//                 {status === 'succeeded' && items.length > 0 && (
-//                     <ProductGrid products={items} />
-//                 )}
-//             </div>
-//         </div>
-//     );
-// }

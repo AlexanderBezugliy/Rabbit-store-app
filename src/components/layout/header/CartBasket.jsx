@@ -24,7 +24,7 @@ const CartBasket = ({ basketOpen, toggleCartBasket }) => {
                     onClick={toggleCartBasket}
                     className=' bg-white border-2 border-gray-300 p-2 rounded-full hover:bg-red-200'
                 >
-                    <IoMdClose className='h-7 w-7 text-red-600' />
+                    <IoMdClose className='h-6 w-6 text-red-600' />
                 </button>
             </div>
 

@@ -28,8 +28,8 @@ const CartContents = () => {
     if (cartItems.length === 0) {
         return (
             <div className="text-center py-8 text-gray-500">
-                <p>Ваша корзина пуста.</p>
-                <p>Начните добавлять товары, чтобы увидеть их здесь!</p>
+                <p>Your cart is empty.</p>
+                <p>Start adding items to see them here!</p>
             </div>
         );
     }

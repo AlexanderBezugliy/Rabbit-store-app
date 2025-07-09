@@ -3,11 +3,13 @@ import ProductGrid from './ProductGrid';
 import { products } from '../../data/products';
 import { useEffect, useState } from 'react';
 import { addProduct } from '../../redux/slices/productsSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { products as allProductsData } from '../../data/products';
 
 
 function shuffleArray(array) {
-    const shuffledArray = [...array]; // Создаем копию, чтобы не изменять исходный массив
+    const shuffledArray = [...array];
 
     for (let i = shuffledArray.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -17,7 +19,7 @@ function shuffleArray(array) {
     return shuffledArray;
 }
 
-const ProductsDetails = ({ product }) => { // <--- ПРОПСЫ
+const ProductsDetails = ({ product }) => {
     const [mainImg, setMainImg] = useState();
     const [selectedSize, setSelectedSize] = useState();
     const [selectedColor, setSelectedColor] = useState();
@@ -28,22 +30,25 @@ const ProductsDetails = ({ product }) => { // <--- ПРОПСЫ
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setMainImg(product.images[0]?.url);
-
-        setSelectedSize(null);
-        setSelectedColor(null);
-        setQuantity(1);
-
         if (product) {
-            const filteredProducts = products.filter(
+            setMainImg(product.images[0]?.url);
+            setSelectedSize(null);
+            setSelectedColor(null);
+            setQuantity(1);
+
+            const filteredProducts = allProductsData.filter(
                 p => p.gender === product.gender && p._id !== product._id
             );
 
             const randomProducts = shuffleArray(filteredProducts).slice(0, 4);
+
             setYouMayAlsoLikeProducts(randomProducts);
         }
-
     }, [product]);
+
+    if (!product) {
+        return <div className="text-center py-10">Продукт не найден или не загружен.</div>;
+    }
 
     const handleQuantityChage = (action) => {
         if (action === 'plus') {
@@ -63,13 +68,12 @@ const ProductsDetails = ({ product }) => { // <--- ПРОПСЫ
         setIsButtonDisabled(true);
 
         setTimeout(() => {
-            dispatch(addProduct({ product, selectedSize, selectedColor, quantity })); // <<<<
+            dispatch(addProduct({ product, selectedSize, selectedColor, quantity }));
 
-            toast.success(`${quantity} x ${product.name} (${selectedSize}, ${selectedColor}) добавлен в корзину!`, { 
+            toast.success(`${quantity} x ${product.name} (${selectedSize}, ${selectedColor}) добавлен в корзину!`, {
                 duration: 1000,
             });
             setIsButtonDisabled(false);
-            // Сброс выбора после добавления (опционально)
             setSelectedSize(null);
             setSelectedColor(null);
             setQuantity(1);
@@ -79,7 +83,8 @@ const ProductsDetails = ({ product }) => { // <--- ПРОПСЫ
     return (
         <div className='p-6'>
             <div className='max-w-6xl mx-auto bg-white p-8 rounded-lg'>
-                {/* Best Seller (Теперь это динамически выбранный продукт) */}
+                {/* ВЕСЬ ВАШ ТЕКУЩИЙ JSX для отображения product */}
+                {/* Убедитесь, что все ссылки на 'product' внутри JSX обращаются к пропсу `product` */}
                 <div className='flex flex-col md:flex-row'>
                     {/* LEFT SIDE(Thumbnails(large-screen))*/}
                     <div className='hidden md:flex flex-col space-y-4 mr-6'>
@@ -141,8 +146,7 @@ const ProductsDetails = ({ product }) => { // <--- ПРОПСЫ
                                         onClick={() => setSelectedColor(c)}
                                         className={`w-8 h-8 rounded-full border duration-300 ${selectedColor === c ? 'border-4 border-black' : 'border-4 border-gray-200'}`}
                                         style={{
-                                            backgroundColor: c.toLowerCase(), // Убедитесь, что цвет в нижнем регистре
-                                            // filter: 'brightness(0.5)', // Возможно, этот фильтр вам не нужен, если цвета выглядят тускло
+                                            backgroundColor: c.toLowerCase(),
                                         }}
                                     >
                                     </button>
@@ -187,16 +191,16 @@ const ProductsDetails = ({ product }) => { // <--- ПРОПСЫ
                         <button
                             onClick={handleAddToCart}
                             disabled={isButtonDisabled}
-                            className={`bg-black text-white py-2 px-6 rounded w-full mb-4 
+                            className={`bg-black text-white py-2 px-6 rounded w-full mb-4
                                         ${isButtonDisabled
-                                            ? 'cursor-not-allowed opacity-50'
-                                            : 'hover:bg-gray-900'}`}
+                                    ? 'cursor-not-allowed opacity-50'
+                                    : 'hover:bg-gray-900'}`}
                         >
                             {isButtonDisabled ? 'Adding...' : 'ADD TO CART'}
                         </button>
 
                         <div className="mt-4 text-gray-700">
-                            <h3 className='text-xl font-bold mb-4'>Characteristic:</h3> {/* Исправил Charactiristic */}
+                            <h3 className='text-xl font-bold mb-4'>Characteristic:</h3>
                             <table className='w-full text-left text-sm text-gray-600'>
                                 <tbody>
                                     <tr>
@@ -207,7 +211,6 @@ const ProductsDetails = ({ product }) => { // <--- ПРОПСЫ
                                         <td className='py-1'>Material</td>
                                         <td className='py-1'>{product.material}</td>
                                     </tr>
-                                    {/* Добавляем другие характеристики из вашего API */}
                                     <tr>
                                         <td className='py-1'>Category</td>
                                         <td className='py-1'>{product.category}</td>
@@ -220,7 +223,6 @@ const ProductsDetails = ({ product }) => { // <--- ПРОПСЫ
                                         <td className='py-1'>SKU</td>
                                         <td className='py-1'>{product.sku}</td>
                                     </tr>
-                                    {/* Можно добавить rating и numReviews, если хотите */}
                                     {product.rating && (
                                         <tr>
                                             <td className='py-1'>Rating</td>
@@ -242,7 +244,7 @@ const ProductsDetails = ({ product }) => { // <--- ПРОПСЫ
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default ProductsDetails;
