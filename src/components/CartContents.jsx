@@ -55,29 +55,34 @@ const CartContents = () => {
                         <p className="text-sm text-gray-600">Color: {item.selectedColor}</p>
                         <p className="text-md font-bold">${((item.product.discountPrice || item.product.price) * item.quantity).toFixed(2)}</p>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-6">
+                            <div className='space-x-3'>
+                                <button
+                                    onClick={() => handleUpdateQuantity(item, item.quantity - 1)}
+                                    className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-400 duration-300"
+                                >
+                                    -
+                                </button>
+                                <span>{item.quantity}</span>
+                                <button
+                                    onClick={() => handleUpdateQuantity(item, item.quantity + 1)}
+                                    className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-400 duration-300"
+                                >
+                                    +
+                                </button>
+                            </div>
+
+
                             <button
-                                onClick={() => handleUpdateQuantity(item, item.quantity - 1)}
-                                className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-400 duration-300"
+                                onClick={() => handleRemoveItem(item.product._id, item.selectedSize, item.selectedColor)}
+                                className="flex text-red-500 border rounded-xl p-2 hover:bg-red-200 duration-300"
                             >
-                                -
-                            </button>
-                            <span>{item.quantity}</span>
-                            <button
-                                onClick={() => handleUpdateQuantity(item, item.quantity + 1)}
-                                className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-400 duration-300"
-                            >
-                                +
+                                <FaTrashCan className='text-3xl  ' />
                             </button>
                         </div>
                     </div>
 
-                    <button
-                        onClick={() => handleRemoveItem(item.product._id, item.selectedSize, item.selectedColor)}
-                        className="flex text-red-500 border rounded-xl p-2 hover:bg-red-200 duration-300"
-                    >
-                        <FaTrashCan className='text-3xl  ' />
-                    </button>
+
                 </div>
             ))}
 

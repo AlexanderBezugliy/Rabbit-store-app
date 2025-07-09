@@ -135,6 +135,7 @@ const NavBar = () => {
                             Women
                         </Link>
                         <Link
+                            onClick={toggleNavMenuOpen}
                             to='/collections/all'
                             className='block text-gray-600 hover:text-black duration-100'
                         >

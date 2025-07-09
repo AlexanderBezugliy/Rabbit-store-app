@@ -154,8 +154,8 @@ export default function CollectionPage() {
             </div>
 
             <div className="flex-grow p-4">
-                <div className="flex justify-between">
-                    <h2 className="my-auto text-2xl uppercase bg-red-300 inline-flex px-4 py-1 rounded-lg text-white">{pageTitle}</h2>
+                <div className="flex flex-col sm:flex-row sm:justify-between space-y-4 sm:space-y-0">
+                    <h2 className="my-auto text-lg text-center sm:text-2xl uppercase bg-red-300 px-4 py-1 rounded-lg text-white">{pageTitle}</h2>
                     <SortOptions />
                 </div>
 
